@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="description" content="شجرة عائلة بن خادم — عرض تفاعلي للأنساب" />
+  <title>شجرة عائلة بن خادم</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Cairo:wght@300;400;600;700&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- ===== Top Bar ===== -->
+  <header class="topbar" role="banner">
+    <div class="topbar__brand">
+      <div class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 48 48" width="40" height="40">
+          <circle cx="24" cy="14" r="5" />
+          <path d="M24 19 L24 30" stroke-width="2" fill="none" />
+          <path d="M24 26 L14 34 M24 26 L34 34" stroke-width="2" fill="none" />
+          <circle cx="14" cy="36" r="3.5" />
+          <circle cx="34" cy="36" r="3.5" />
+        </svg>
+      </div>
+      <div class="brand__text">
+        <h1 class="brand__title" id="app-title">شجرة عائلة بن خادم</h1>
+        <p class="brand__subtitle" id="app-subtitle">في إمارة الشارقة</p>
+      </div>
+    </div>
+
+    <div class="search" role="search">
+      <svg class="search__icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <circle cx="11" cy="11" r="7" fill="none" stroke-width="2" />
+        <line x1="16.5" y1="16.5" x2="21" y2="21" stroke-width="2" />
+      </svg>
+      <input
+        type="search"
+        id="search-input"
+        class="search__input"
+        placeholder="ابحث عن اسم في الشجرة..."
+        aria-label="البحث عن شخص"
+        autocomplete="off"
+      />
+      <div id="search-results" class="search__results" hidden></div>
+    </div>
+
+    <div class="topbar__actions">
+      <!-- View mode switcher -->
+      <div class="view-switcher" role="group" aria-label="نمط العرض">
+        <button class="view-btn is-active" data-view="outline" title="شجرة تفصيلية" aria-label="شجرة تفصيلية">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 5h16M8 12h12M12 19h8M4 12h1M4 19h5" fill="none" stroke-width="2"/></svg>
+        </button>
+        <button class="view-btn" data-view="compact" title="شجرة مدمجة" aria-label="شجرة مدمجة">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M3 6h18M3 12h18M3 18h18" fill="none" stroke-width="2"/></svg>
+        </button>
+        <button class="view-btn" data-view="cards" title="بطاقات حسب الجيل" aria-label="بطاقات">
+          <svg viewBox="0 0 24 24" width="16" height="16"><path d="M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z" fill="none" stroke-width="2"/></svg>
+        </button>
+      </div>
+
+      <span class="topbar__divider" aria-hidden="true"></span>
+
+      <!-- Depth / expand controls -->
+      <div class="depth-controls" id="depth-controls">
+        <label class="depth-select-wrap" title="مستوى التوسيع">
+          <span class="depth-select-wrap__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M12 2l9 5-9 5-9-5 9-5zM3 12l9 5 9-5M3 17l9 5 9-5" fill="none" stroke-width="2"/></svg>
+          </span>
+          <select id="depth-select" aria-label="مستوى التوسيع">
+            <option value="1">مستوى 1</option>
+            <option value="2">مستوى 2</option>
+            <option value="3">مستوى 3</option>
+            <option value="4">مستوى 4</option>
+            <option value="5">مستوى 5</option>
+            <option value="all" selected>كل المستويات</option>
+          </select>
+        </label>
+        <button id="btn-expand-all" class="icon-btn" title="توسيع الكل" aria-label="توسيع الكل">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 9l4-4 4 4M8 15l4 4 4-4" fill="none" stroke-width="2"/></svg>
+        </button>
+        <button id="btn-collapse-all" class="icon-btn" title="طي الكل" aria-label="طي الكل">
+          <svg viewBox="0 0 24 24" width="18" height="18"><path d="M8 15l4-4 4 4M8 9l4 4 4-4" fill="none" stroke-width="2"/></svg>
+        </button>
+      </div>
+
+      <span class="topbar__divider" aria-hidden="true"></span>
+
+      <!-- Owner lock / unlock -->
+      <button id="btn-lock" class="icon-btn btn-lock" title="فتح وضع التحرير (للمالك)" aria-label="فتح وضع التحرير">
+        <svg id="icon-locked" viewBox="0 0 24 24" width="18" height="18"><path d="M6 10V7a6 6 0 1 1 12 0v3M5 10h14v10H5z" fill="none" stroke-width="2"/></svg>
+        <svg id="icon-unlocked" viewBox="0 0 24 24" width="18" height="18" style="display:none"><path d="M6 10V7a6 6 0 0 1 11.4-2.6M5 10h14v10H5z" fill="none" stroke-width="2"/></svg>
+      </button>
+
+      <!-- Owner-only buttons (hidden when locked) -->
+      <button id="btn-import" class="icon-btn owner-only" title="استيراد بيانات" aria-label="استيراد بيانات" hidden>
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 3v13m-5-5l5 5 5-5M4 21h16" fill="none" stroke-width="2"/></svg>
+      </button>
+      <button id="btn-export" class="icon-btn owner-only" title="تصدير بيانات للمشاركة" aria-label="تصدير بيانات" hidden>
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M12 21V8m-5 5l5-5 5 5M4 3h16" fill="none" stroke-width="2"/></svg>
+      </button>
+
+      <span class="topbar__divider owner-only" aria-hidden="true" hidden></span>
+
+      <button id="btn-print" class="icon-btn" title="طباعة" aria-label="طباعة">
+        <svg viewBox="0 0 24 24" width="18" height="18"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z" fill="none" stroke-width="2"/></svg>
+      </button>
+      <button id="btn-theme" class="icon-btn" title="الوضع الليلي" aria-label="تبديل الوضع الليلي">
+        <svg id="icon-moon" viewBox="0 0 24 24" width="18" height="18"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" fill="none" stroke-width="2"/></svg>
+        <svg id="icon-sun" viewBox="0 0 24 24" width="18" height="18" style="display:none"><circle cx="12" cy="12" r="4" fill="none" stroke-width="2"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-width="2"/></svg>
+      </button>
+      <button id="btn-help" class="icon-btn" title="المساعدة والدليل" aria-label="المساعدة">
+        <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="9" fill="none" stroke-width="2"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7M12 17h.01" fill="none" stroke-width="2"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- View-only mode indicator (visible to family members) -->
+  <div id="viewer-strip" class="viewer-strip">
+    <span class="viewer-strip__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="14" height="14"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </span>
+    <span>وضع العرض — تصفّح الشجرة وابحث عن الأسماء وشاهد التفاصيل. التعديل متاح للمالك فقط.</span>
+    <button id="viewer-strip-close" class="viewer-strip__close" aria-label="إغلاق">×</button>
+  </div>
+
+  <!-- Edit mode banner (owner) -->
+  <div id="edit-banner" class="edit-banner" hidden>
+    <span class="edit-banner__dot" aria-hidden="true"></span>
+    <span class="edit-banner__text">وضع التحرير مُفعّل — التغييرات تُحفظ تلقائياً. اضغط <strong>تصدير</strong> لنشر النسخة الجديدة للعائلة.</span>
+    <button id="btn-lock-done" class="edit-banner__btn">إقفال</button>
+  </div>
+
+  <!-- Dirty indicator -->
+  <div id="dirty-indicator" class="dirty-indicator" hidden>
+    <span class="dirty-indicator__dot"></span>
+    <span>تغييرات غير مُصدّرة</span>
+    <button id="btn-export-quick" class="dirty-indicator__btn">تصدير الآن</button>
+    <button id="btn-revert" class="dirty-indicator__btn dirty-indicator__btn--ghost" title="استعادة البيانات الأصلية">استعادة</button>
+  </div>
+
+  <input type="file" id="import-file" accept=".json,application/json" hidden />
+
+  <!-- ===== Tree ===== -->
+  <main class="tree-wrap" id="tree-wrap" aria-label="الشجرة">
+    <div id="loading" class="loading">
+      <div class="loading__spinner" aria-hidden="true"></div>
+      <p>جاري تحميل الشجرة...</p>
+    </div>
+    <div id="tree-container" class="tree" role="tree" aria-label="شجرة العائلة"></div>
+
+    <div class="hint" id="hint">
+      انقر <span class="hint__chevron">▾</span> للطي/التوسيع · انقر مزدوجاً عليه لكل الفروع · غيّر نمط العرض من الأعلى.
+      <button class="hint__close" id="hint-close" aria-label="إغلاق">×</button>
+    </div>
+  </main>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer__left">
+      <span id="stat-people"></span>
+    </div>
+    <div class="footer__center">
+      <span id="researcher-credit"></span>
+    </div>
+    <div class="footer__right">
+      <span id="research-date"></span>
+    </div>
+  </footer>
+
+  <!-- ===== Profile Modal ===== -->
+  <div class="modal" id="profile-modal" role="dialog" aria-modal="true" aria-labelledby="modal-name" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" id="modal-close" aria-label="إغلاق">×</button>
+
+      <div class="profile">
+        <!-- Lineage breadcrumbs -->
+        <nav class="lineage" id="lineage" aria-label="السلسلة من الجد الأعلى"></nav>
+
+        <div class="profile__header">
+          <div class="profile__photo" id="profile-photo" aria-hidden="true">
+            <span id="profile-initial">؟</span>
+          </div>
+          <div class="profile__head-text">
+            <h2 id="modal-name" class="profile__name">—</h2>
+            <p id="profile-full" class="profile__full"></p>
+            <div class="profile__badges" id="profile-badges"></div>
+          </div>
+          <div class="profile__header-actions">
+            <button class="btn btn--sm btn--ghost" id="profile-share-btn" title="نسخ رابط لهذا الشخص">
+              <svg viewBox="0 0 24 24" width="14" height="14"><path d="M18 8a3 3 0 1 0-2.83-4H15M6 12a3 3 0 1 0 0 .01zM18 16a3 3 0 1 0 0 .01zM8.6 10.5l6.8-4M8.6 13.5l6.8 4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              مشاركة
+            </button>
+            <button class="btn btn--sm btn--primary owner-only" id="profile-edit-btn" hidden>
+              <svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 17v4h4l12-12-4-4L3 17z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              تحرير
+            </button>
+          </div>
+        </div>
+
+        <div class="profile__grid">
+          <section class="profile__section">
+            <h3 class="profile__heading">المعلومات الأساسية</h3>
+            <dl class="profile__facts" id="profile-facts"></dl>
+          </section>
+
+          <section class="profile__section">
+            <h3 class="profile__heading">الصلات العائلية</h3>
+            <div class="relation-group">
+              <span class="relation-group__label">الأب</span>
+              <div class="relation-group__list" id="rel-father"></div>
+            </div>
+            <div class="relation-group">
+              <span class="relation-group__label">الأم</span>
+              <div class="relation-group__list" id="rel-mother"></div>
+            </div>
+            <div class="relation-group">
+              <span class="relation-group__label">الزوج/الزوجة</span>
+              <div class="relation-group__list" id="rel-spouse"></div>
+            </div>
+            <div class="relation-group">
+              <span class="relation-group__label">الأبناء</span>
+              <div class="relation-group__list" id="rel-children"></div>
+            </div>
+            <div class="relation-group">
+              <span class="relation-group__label">الإخوة</span>
+              <div class="relation-group__list" id="rel-siblings"></div>
+            </div>
+          </section>
+
+          <section class="profile__section profile__section--full" id="profile-notes-wrap" hidden>
+            <h3 class="profile__heading">ملاحظات</h3>
+            <p class="profile__notes" id="profile-notes"></p>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Edit Modal ===== -->
+  <div class="modal" id="edit-modal" role="dialog" aria-modal="true" aria-labelledby="edit-title" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" id="edit-close" aria-label="إغلاق">×</button>
+
+      <div class="edit-form">
+        <h2 id="edit-title" class="edit-form__title">تحرير شخص</h2>
+        <p class="edit-form__sub" id="edit-subtitle"></p>
+
+        <form id="edit-form" autocomplete="off" novalidate>
+          <div class="field-grid">
+            <label class="field field--full">
+              <span class="field__label">الاسم <span class="req">*</span></span>
+              <input type="text" name="name" required placeholder="مثلاً: محمد بن خادم" />
+              <span class="field__help">الاسم الذي يظهر في الشجرة</span>
+            </label>
+
+            <label class="field field--full">
+              <span class="field__label">الاسم الكامل (السلسلة)</span>
+              <input type="text" name="displayName" placeholder="مثلاً: الشيخ محمد بن خادم بن محمد النعيمي" />
+              <span class="field__help">اختياري — يظهر في النافذة التفصيلية</span>
+            </label>
+
+            <label class="field">
+              <span class="field__label">الجنس <span class="req">*</span></span>
+              <select name="gender" required>
+                <option value="male">ذكر</option>
+                <option value="female">أنثى</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="field__label">رابط الصورة</span>
+              <input type="text" name="photoUrl" placeholder="assets/photo.jpg" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">تاريخ الميلاد</span>
+              <input type="text" name="birthDate" placeholder="1850م" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">تاريخ الوفاة</span>
+              <input type="text" name="deathDate" placeholder="1920م" />
+            </label>
+
+            <label class="field">
+              <span class="field__label">الأب</span>
+              <select name="fatherId" class="select-person">
+                <option value="">— لا يوجد —</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span class="field__label">الأم</span>
+              <select name="motherId" class="select-person">
+                <option value="">— لا يوجد —</option>
+              </select>
+            </label>
+
+            <div class="field field--full">
+              <span class="field__label">الأزواج / الزوجات</span>
+              <div class="chip-picker" id="spouses-picker">
+                <span class="chip-picker__empty">— لا يوجد —</span>
+              </div>
+              <div class="chip-picker-actions">
+                <select class="select-person" id="add-spouse-select">
+                  <option value="">— اختر شخصاً —</option>
+                </select>
+                <button type="button" class="btn btn--sm" id="add-spouse-btn">+ ربط</button>
+                <button type="button" class="btn btn--sm btn--ghost" id="new-spouse-btn">+ شخص جديد</button>
+              </div>
+            </div>
+
+            <label class="field field--full">
+              <span class="field__label">ملاحظات</span>
+              <textarea name="notes" rows="4" placeholder="ملاحظات إضافية، مصادر، روابط..."></textarea>
+            </label>
+
+            <div class="field field--full flags">
+              <label class="flag">
+                <input type="checkbox" name="uncertain" />
+                <span>معلومة غير مؤكدة (بحاجة للتحقق)</span>
+              </label>
+              <label class="flag">
+                <input type="checkbox" name="external" />
+                <span>شخص من خارج العائلة (مصاهرة)</span>
+              </label>
+              <label class="flag">
+                <input type="checkbox" name="researcher" />
+                <span>معدّ البحث</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="edit-form__actions">
+            <button type="button" class="btn btn--danger" id="edit-delete-btn">
+              <svg viewBox="0 0 24 24" width="14" height="14"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M6 6l1 14a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-14" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+              حذف
+            </button>
+            <div class="edit-form__right-actions">
+              <button type="button" class="btn btn--ghost" id="edit-cancel-btn">إلغاء</button>
+              <button type="submit" class="btn btn--primary">حفظ</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Unlock Modal ===== -->
+  <div class="modal" id="unlock-modal" role="dialog" aria-modal="true" aria-labelledby="unlock-title" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__dialog modal__dialog--sm" role="document">
+      <button class="modal__close" data-close="1" aria-label="إغلاق">×</button>
+      <div class="unlock">
+        <div class="unlock__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="36" height="36"><path d="M6 10V7a6 6 0 1 1 12 0v3M5 10h14v10H5z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h2 id="unlock-title" class="unlock__title">فتح وضع التحرير</h2>
+        <p class="unlock__sub" id="unlock-sub">أدخل كلمة المرور الخاصة بمالك الشجرة للسماح بالتعديل والحفظ.</p>
+
+        <form id="unlock-form" autocomplete="off">
+          <label class="field field--full">
+            <span class="field__label">كلمة المرور</span>
+            <input type="password" name="passphrase" id="unlock-passphrase" required />
+          </label>
+          <div id="unlock-error" class="unlock__error" hidden>كلمة المرور غير صحيحة.</div>
+          <div class="unlock__actions">
+            <button type="button" class="btn btn--ghost" id="unlock-cancel">إلغاء</button>
+            <button type="submit" class="btn btn--primary">فتح</button>
+          </div>
+        </form>
+
+        <!-- Setup mode (first time) -->
+        <div id="unlock-setup" hidden>
+          <div class="unlock__divider"></div>
+          <p class="unlock__sub"><strong>أول مرة؟</strong> لم يتم تعيين كلمة مرور بعد. يمكنك تعيين واحدة الآن لحماية التعديل من الآخرين.</p>
+          <form id="setup-form" autocomplete="off">
+            <label class="field field--full">
+              <span class="field__label">تعيين كلمة مرور جديدة</span>
+              <input type="password" name="passphrase1" id="setup-passphrase1" required minlength="4" />
+            </label>
+            <label class="field field--full">
+              <span class="field__label">تأكيد كلمة المرور</span>
+              <input type="password" name="passphrase2" id="setup-passphrase2" required minlength="4" />
+            </label>
+            <div id="setup-error" class="unlock__error" hidden></div>
+            <div class="unlock__actions">
+              <button type="button" class="btn btn--ghost" id="setup-skip">تخطّي (بدون حماية)</button>
+              <button type="submit" class="btn btn--primary">تعيين وفتح</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Welcome Tour ===== -->
+  <div class="modal" id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" id="welcome-close" aria-label="إغلاق">×</button>
+      <div class="welcome">
+        <div class="welcome__header">
+          <div class="welcome__icon" aria-hidden="true">
+            <svg viewBox="0 0 48 48" width="56" height="56">
+              <circle cx="24" cy="14" r="5" />
+              <path d="M24 19 L24 30" stroke-width="2" fill="none" />
+              <path d="M24 26 L14 34 M24 26 L34 34" stroke-width="2" fill="none" />
+              <circle cx="14" cy="36" r="3.5" />
+              <circle cx="34" cy="36" r="3.5" />
+            </svg>
+          </div>
+          <h2 id="welcome-title" class="welcome__title">أهلاً بك في شجرة عائلة بن خادم</h2>
+          <p class="welcome__sub">هذه نسخة تفاعلية تتيح لك تصفّح الأنساب والبحث عن أي فرد من العائلة.</p>
+        </div>
+
+        <ul class="welcome__features">
+          <li>
+            <span class="welcome__ico">🌳</span>
+            <div>
+              <strong>تصفّح الشجرة</strong><br/>
+              انقر على <span class="chip-ex">▾</span> لتوسيع أو طي أي فرع. اضغط مزدوجاً للتوسيع الكامل.
+            </div>
+          </li>
+          <li>
+            <span class="welcome__ico">🔍</span>
+            <div>
+              <strong>البحث السريع</strong><br/>
+              اكتب أي اسم في شريط البحث للعثور عليه مباشرة في الشجرة.
+            </div>
+          </li>
+          <li>
+            <span class="welcome__ico">👤</span>
+            <div>
+              <strong>تفاصيل الأشخاص</strong><br/>
+              انقر على أي اسم لعرض تاريخ ميلاده، أبنائه، أزواجه، وإخوانه.
+            </div>
+          </li>
+          <li>
+            <span class="welcome__ico">🎨</span>
+            <div>
+              <strong>ثلاث طرق للعرض</strong><br/>
+              تفصيلية، مدمجة، أو بطاقات حسب الجيل — اختر ما يناسبك من الأعلى.
+            </div>
+          </li>
+          <li>
+            <span class="welcome__ico">🔒</span>
+            <div>
+              <strong>التعديل محمي</strong><br/>
+              التعديل متاح لمالك الشجرة فقط. يمكنك التصفّح بحرية دون القلق من تغيير البيانات.
+            </div>
+          </li>
+        </ul>
+
+        <div class="welcome__actions">
+          <label class="flag">
+            <input type="checkbox" id="welcome-dont-show" />
+            <span>لا تُظهر هذه الرسالة مرة أخرى</span>
+          </label>
+          <button class="btn btn--primary" id="welcome-start">ابدأ التصفّح</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Confirm Dialog ===== -->
+  <div class="modal" id="confirm-modal" role="dialog" aria-modal="true" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__dialog modal__dialog--sm" role="document">
+      <div class="confirm">
+        <h3 id="confirm-title" class="confirm__title">تأكيد</h3>
+        <p id="confirm-body" class="confirm__body"></p>
+        <div class="confirm__actions">
+          <button type="button" class="btn btn--ghost" id="confirm-cancel">إلغاء</button>
+          <button type="button" class="btn btn--danger" id="confirm-ok">تأكيد</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Help Modal ===== -->
+  <div class="modal" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-title" hidden>
+    <div class="modal__backdrop" data-close="1"></div>
+    <div class="modal__dialog" role="document">
+      <button class="modal__close" data-close="1" aria-label="إغلاق">×</button>
+      <div class="help">
+        <h2 id="help-title" class="help__title">دليل الاستخدام</h2>
+
+        <section class="help__section">
+          <h3>التصفّح</h3>
+          <ul>
+            <li>انقر على <span class="chip-ex">▾</span> بجانب الاسم لطي أو توسيع الفرع.</li>
+            <li>انقر مزدوجاً على <span class="chip-ex">▾</span> لطي أو توسيع كل الفروع تحت ذلك الشخص.</li>
+            <li>استخدم أزرار <span class="chip-ex">⇅</span> في الأعلى لتوسيع أو طي كامل الشجرة.</li>
+            <li>اختر "مستوى 1" أو "مستوى 2" إلخ من القائمة المنسدلة لإظهار عدد معيّن من الأجيال فقط.</li>
+          </ul>
+        </section>
+
+        <section class="help__section">
+          <h3>طرق العرض</h3>
+          <ul>
+            <li><strong>تفصيلية</strong> — الشجرة الكاملة مع أسماء الأزواج بجانب كل شخص.</li>
+            <li><strong>مدمجة</strong> — نفس الشجرة بمساحة أصغر لرؤية أكثر على الشاشة.</li>
+            <li><strong>بطاقات</strong> — عرض كل الأشخاص مجمّعين حسب الجيل.</li>
+          </ul>
+        </section>
+
+        <section class="help__section">
+          <h3>اختصارات لوحة المفاتيح</h3>
+          <table class="help__shortcuts">
+            <tr><td><kbd>/</kbd></td><td>الانتقال إلى البحث</td></tr>
+            <tr><td><kbd>Esc</kbd></td><td>إغلاق النوافذ المفتوحة</td></tr>
+            <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td>التنقل في نتائج البحث</td></tr>
+            <tr><td><kbd>Enter</kbd></td><td>فتح النتيجة المحددة</td></tr>
+            <tr><td><kbd>?</kbd></td><td>فتح هذه النافذة</td></tr>
+          </table>
+        </section>
+
+        <section class="help__section">
+          <h3>الرموز والألوان</h3>
+          <ul class="legend">
+            <li class="legend__item"><span class="legend__swatch legend__swatch--male"></span><span>ذكر من العائلة</span></li>
+            <li class="legend__item"><span class="legend__swatch legend__swatch--female"></span><span>أنثى من العائلة</span></li>
+            <li class="legend__item"><span class="legend__swatch legend__swatch--external"></span><span>زوج/زوجة من خارج العائلة</span></li>
+            <li class="legend__item"><span class="legend__swatch legend__swatch--uncertain"></span><span>معلومة غير مؤكدة (؟)</span></li>
+            <li class="legend__item"><span class="legend__swatch legend__swatch--researcher"></span><span>معدّ البحث</span></li>
+          </ul>
+        </section>
+
+        <section class="help__section">
+          <h3>للمالك فقط</h3>
+          <p>لتعديل أي معلومة، انقر على أيقونة القفل <span class="chip-ex">🔒</span> في الأعلى وأدخل كلمة المرور. بعد الحفظ، لا تنس <strong>تصدير</strong> الملف الجديد ومشاركته مع العائلة.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

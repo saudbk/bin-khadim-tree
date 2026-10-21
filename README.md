@@ -17,15 +17,24 @@ An interactive Arabic-first family tree web app for the Bin Khadim family of Sha
 ## For the owner
 
 - **Edit mode is passphrase-protected.** Click the 🔒 lock icon in the top bar and enter your passphrase to unlock.
-- First time? The app will prompt you to set a passphrase. The SHA-256 hash of that passphrase is stored in `data/family.json` so it travels with the file.
 - Once unlocked, every row gets `+` (add child), `✎` (edit), and `🗑` (delete) buttons. All changes auto-save to your browser.
 - **Export** the updated `family-YYYY-MM-DD.json` file and replace `data/family.json` on your host to publish the new version. Family members pick it up automatically on their next visit.
 - Click the lock icon again (or the "إقفال" button) to lock back to view mode.
 - Owner session persists per browser — enter the passphrase once, stay unlocked across reloads on that device.
 
-### Resetting your passphrase
+### Setting the initial passphrase (first-time owner setup)
 
-To change or reset it, open `data/family.json` and delete the `ownerHash` line from `metadata`. The next time anyone opens the lock, they'll be prompted to set a new one.
+Family members visiting the public site never see a "set a passphrase" option — that would let them hijack editing. To set your passphrase, the owner opens the site with `?setup=1` appended to the URL:
+
+```
+https://your-host/bin-khadim-tree/?setup=1
+```
+
+Click the 🔒 lock, set your passphrase, click Export, and upload the downloaded `family.json` to replace `data/family.json` on your host. The hash of your passphrase is now baked into the published file, so family members get the prompt-only lock from then on.
+
+### Changing or resetting the passphrase
+
+Open `data/family.json` and delete the `ownerHash` line from `metadata`, upload. Then visit the site with `?setup=1` again and set a new one.
 
 ---
 

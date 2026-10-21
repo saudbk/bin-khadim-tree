@@ -51,16 +51,16 @@
     loadViewPrefs();
 
     // Owner session: persisted per browser. Only honor it if this file has a
-    // hash set (otherwise anyone could "unlock" by flipping a flag).
+    // hash set — AND the stored hash matches it (owner session is scoped to
+    // a specific hash so re-locking after a password change works).
     const hasHash = !!(state.data.metadata && state.data.metadata.ownerHash);
-    const owner = localStorage.getItem(LS_OWNER) === '1';
-    if (!hasHash) {
-      // No passphrase set yet. For the local, no-hash case, we treat
-      // this browser as owner by default so a new tree isn't locked
-      // out — the first export can set a passphrase via Setup flow.
-      state.isOwner = owner !== false; // default: true for a fresh tree
+    const storedOwner = localStorage.getItem(LS_OWNER);
+    if (hasHash && storedOwner === state.data.metadata.ownerHash) {
+      state.isOwner = true;
     } else {
-      state.isOwner = owner;
+      state.isOwner = false;
+      // Clear any stale owner flag
+      if (storedOwner) { try { localStorage.removeItem(LS_OWNER); } catch (_) {} }
     }
     applyOwnerUIState();
 
@@ -262,22 +262,37 @@
       errEl.hidden = true;
       setupErr.hidden = true;
       const hasHash = !!(state.data.metadata && state.data.metadata.ownerHash);
-      // Show setup block only if there's no hash yet
-      setupBlock.hidden = hasHash;
-      unlockForm.hidden = !hasHash;
-      // Update prompt text accordingly
+      // Setup flow is ONLY accessible via a special URL flag that only the
+      // owner would ever use on their local copy. Family members visiting
+      // the hosted site never see it, even on a tree with no hash yet.
+      const params = new URLSearchParams(window.location.search);
+      const setupAllowed = params.get('setup') === '1';
       const subEl = document.getElementById('unlock-sub');
+
       if (hasHash) {
+        // Normal unlock path — enter passphrase.
+        setupBlock.hidden = true;
+        unlockForm.hidden = false;
         subEl.textContent = 'أدخل كلمة المرور الخاصة بمالك الشجرة للسماح بالتعديل والحفظ.';
+      } else if (setupAllowed) {
+        // Owner-only initial setup path, triggered by ?setup=1 in URL.
+        setupBlock.hidden = false;
+        unlockForm.hidden = true;
+        subEl.textContent = 'تعيين كلمة مرور جديدة لحماية التحرير.';
       } else {
-        subEl.textContent = 'لم يتم تعيين كلمة مرور بعد لهذه الشجرة.';
+        // No hash and no setup flag → family member view. No form at all.
+        setupBlock.hidden = true;
+        unlockForm.hidden = true;
+        subEl.innerHTML = 'لم يُفعّل المالك خاصية التعديل على هذه الشجرة بعد.<br>للمساهمة بتصحيح أو إضافة، تواصل مع مالك الشجرة مباشرة.';
       }
+
       unlockModal.hidden = false;
       setTimeout(() => {
-        const first = hasHash
-          ? document.getElementById('unlock-passphrase')
-          : document.getElementById('setup-passphrase1');
-        if (first) first.focus();
+        if (hasHash) {
+          document.getElementById('unlock-passphrase')?.focus();
+        } else if (setupAllowed) {
+          document.getElementById('setup-passphrase1')?.focus();
+        }
       }, 60);
     }
     function closeUnlockModal() {
@@ -297,7 +312,9 @@
       const actualHash = await sha256(pw);
       if (actualHash === expectedHash) {
         state.isOwner = true;
-        try { localStorage.setItem(LS_OWNER, '1'); } catch (_) {}
+        // Store the hash itself as the owner-session marker so a password
+        // change invalidates stale unlocks everywhere.
+        try { localStorage.setItem(LS_OWNER, expectedHash); } catch (_) {}
         applyOwnerUIState();
         closeUnlockModal();
         toast('تم فتح وضع التحرير. ستُحفظ تغييراتك محلياً — لا تنس التصدير.', 'success');
@@ -308,6 +325,12 @@
 
     setupForm.addEventListener('submit', async (ev) => {
       ev.preventDefault();
+      // Guard: setup form must never apply unless ?setup=1 is in the URL.
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('setup') !== '1') {
+        toast('غير مسموح.', 'error');
+        return;
+      }
       const p1 = document.getElementById('setup-passphrase1').value;
       const p2 = document.getElementById('setup-passphrase2').value;
       if (p1.length < 4) {
@@ -324,21 +347,26 @@
       state.data.metadata = state.data.metadata || {};
       state.data.metadata.ownerHash = hash;
       state.isOwner = true;
-      try { localStorage.setItem(LS_OWNER, '1'); } catch (_) {}
+      try { localStorage.setItem(LS_OWNER, hash); } catch (_) {}
       saveData();
       applyOwnerUIState();
       closeUnlockModal();
-      toast('تم تعيين كلمة المرور وفتح التحرير. صدّر الملف لحفظها خارج المتصفح.', 'success');
+      toast('تم تعيين كلمة المرور. صدّر الملف وارفعه إلى الموقع لتفعيل الحماية للعائلة.', 'success');
     });
 
-    skipBtn.addEventListener('click', () => {
-      // Allow editing without setting a hash (local-only / testing)
-      state.isOwner = true;
-      try { localStorage.setItem(LS_OWNER, '1'); } catch (_) {}
-      applyOwnerUIState();
-      closeUnlockModal();
-      toast('وضع التحرير مفعّل بدون كلمة مرور (محلياً فقط).', 'default');
-    });
+    // The skip button is removed from the UI; this handler stays only as a
+    // guard in case the element is cached. It no longer unlocks anything
+    // for anyone except the owner using ?setup=1 — same guard as above.
+    if (skipBtn) {
+      skipBtn.addEventListener('click', () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('setup') !== '1') {
+          toast('غير مسموح.', 'error');
+          return;
+        }
+        closeUnlockModal();
+      });
+    }
   }
 
   /* ==============================================================

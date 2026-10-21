@@ -377,10 +377,10 @@
           </div>
         </form>
 
-        <!-- Setup mode (first time) -->
+        <!-- Owner-only setup (accessible via ?setup=1 URL flag) -->
         <div id="unlock-setup" hidden>
           <div class="unlock__divider"></div>
-          <p class="unlock__sub"><strong>أول مرة؟</strong> لم يتم تعيين كلمة مرور بعد. يمكنك تعيين واحدة الآن لحماية التعديل من الآخرين.</p>
+          <p class="unlock__sub"><strong>وضع إعداد المالك</strong> — تعيين كلمة المرور الأولى. بعد الحفظ، صدّر الملف وارفعه إلى الموقع لتفعيل الحماية للعائلة.</p>
           <form id="setup-form" autocomplete="off">
             <label class="field field--full">
               <span class="field__label">تعيين كلمة مرور جديدة</span>
@@ -392,7 +392,6 @@
             </label>
             <div id="setup-error" class="unlock__error" hidden></div>
             <div class="unlock__actions">
-              <button type="button" class="btn btn--ghost" id="setup-skip">تخطّي (بدون حماية)</button>
               <button type="submit" class="btn btn--primary">تعيين وفتح</button>
             </div>
           </form>

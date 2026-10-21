@@ -1,0 +1,3 @@
+# This file exists so the assets/ folder is preserved in Git and zip archives.
+# Drop profile photos here (jpg/png) and reference them from the "photoUrl"
+# field on a person in data/family.json, e.g. "photoUrl": "assets/muhammad.jpg"

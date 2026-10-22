@@ -107,7 +107,7 @@ bin-khadim-tree/
 - `childrenIds` on each parent must include every child that lists them as father or mother (bidirectional).
 - `spouseIds` are also bidirectional.
 - `rootPersonId` must exist in `people`.
-- A child appears under their father in the tree; if the father is `external` or absent, they appear under their mother. This keeps matrilineal branches (like the children of آمنة → المعال) visible.
+- A child appears under their father in the tree; if the father is `external` or absent, they appear under their mother. This keeps matrilineal branches (like the children of آمنة → المعلا) visible.
 
 ---
 

@@ -50,7 +50,7 @@
       "childrenIds": ["p06"],
       "birthDate": null,
       "deathDate": null,
-      "notes": "شقيقة خادم بن محمد بن خادم، وعمة محمد بن خادم الثاني. أم محمد بن أحمد المعال الشهير بـ (الفجعي)",
+      "notes": "شقيقة خادم بن محمد بن خادم، وعمة محمد بن خادم الثاني. أم محمد بن أحمد المعلا الشهير بـ (الفجعي)",
       "photoUrl": null,
       "uncertain": false
     },
@@ -72,8 +72,8 @@
     },
     "sp02": {
       "id": "sp02",
-      "name": "الشيخ أحمد بن عبد الله المعال",
-      "displayName": "الشيخ أحمد بن عبد الله المعال",
+      "name": "الشيخ أحمد بن عبد الله المعلا",
+      "displayName": "الشيخ أحمد بن عبد الله المعلا",
       "gender": "male",
       "fatherId": null,
       "motherId": null,
@@ -118,8 +118,8 @@
     },
     "p06": {
       "id": "p06",
-      "name": "محمد بن أحمد المعال (الفجعي)",
-      "displayName": "الشيخ محمد بن أحمد بن عبد الله المعال - الشهير بـ (الفجعي)",
+      "name": "محمد بن أحمد المعلا (الفجعي)",
+      "displayName": "الشيخ محمد بن أحمد بن عبد الله المعلا - الشهير بـ (الفجعي)",
       "gender": "male",
       "fatherId": "sp02",
       "motherId": "p03",
@@ -150,8 +150,8 @@
     },
     "sp04": {
       "id": "sp04",
-      "name": "آمنة بنت خالد المعال",
-      "displayName": "آمنة بنت الشيخ خالد بن عيسى بن سعيد بن راشد بن ماجد المعال",
+      "name": "آمنة بنت خالد المعلا",
+      "displayName": "آمنة بنت الشيخ خالد بن عيسى بن سعيد بن راشد بن ماجد المعلا",
       "gender": "female",
       "fatherId": null,
       "motherId": null,
@@ -159,7 +159,7 @@
       "childrenIds": ["p10", "p11", "p12"],
       "birthDate": null,
       "deathDate": null,
-      "notes": "الزوجة الثانية لمحمد بن خادم الثاني. أمها عائشة بنت الشيخ علي بن عبد الله المعال بن راشد المعال حاكم أم القيوين",
+      "notes": "الزوجة الثانية لمحمد بن خادم الثاني. أمها عائشة بنت الشيخ علي بن عبد الله المعلا بن راشد المعلا حاكم أم القيوين",
       "photoUrl": null,
       "uncertain": false,
       "external": true
@@ -182,8 +182,8 @@
     },
     "sp06": {
       "id": "sp06",
-      "name": "ميثا بنت الشيخ أحمد المعال",
-      "displayName": "ميثا بنت الشيخ أحمد المعال",
+      "name": "ميثا بنت الشيخ أحمد المعلا",
+      "displayName": "ميثا بنت الشيخ أحمد المعلا",
       "gender": "female",
       "fatherId": null,
       "motherId": null,
@@ -252,7 +252,7 @@
       "childrenIds": ["p19", "p20", "p21"],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن محمد بن خادم الثاني من زوجته آمنة بنت خالد المعال",
+      "notes": "ابن محمد بن خادم الثاني من زوجته آمنة بنت خالد المعلا",
       "photoUrl": null,
       "uncertain": false
     },
@@ -352,8 +352,8 @@
     },
     "sp11": {
       "id": "sp11",
-      "name": "الشيخ راشد بن أحمد المعال",
-      "displayName": "الشيخ راشد بن أحمد بن عبد الله المعال",
+      "name": "الشيخ راشد بن أحمد المعلا",
+      "displayName": "الشيخ راشد بن أحمد بن عبد الله المعلا",
       "gender": "male",
       "fatherId": null,
       "motherId": null,
@@ -840,7 +840,7 @@
       "childrenIds": ["p92", "p93", "p94", "p95"],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن حمدان بن راشد من عائشة النعيمي. تزوج وفاء بنت الشيخ حميد بن أحمد المعال",
+      "notes": "ابن حمدان بن راشد من عائشة النعيمي. تزوج وفاء بنت الشيخ حميد بن أحمد المعلا",
       "photoUrl": null,
       "uncertain": false
     },
@@ -1073,7 +1073,7 @@
       "childrenIds": ["p111", "p112", "p113", "p114"],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن سلطان بن أحمد. تزوج ميسون خليفة المعال",
+      "notes": "ابن سلطان بن أحمد. تزوج ميسون خليفة المعلا",
       "photoUrl": null,
       "uncertain": false
     },
@@ -1362,8 +1362,8 @@
     },
     "sp31": {
       "id": "sp31",
-      "name": "ميسون خليفة المعال",
-      "displayName": "ميسون خليفة المعال",
+      "name": "ميسون خليفة المعلا",
+      "displayName": "ميسون خليفة المعلا",
       "gender": "female",
       "fatherId": null,
       "motherId": null,
@@ -1538,8 +1538,8 @@
     },
     "sp43": {
       "id": "sp43",
-      "name": "وفاء بنت حميد المعال",
-      "displayName": "وفاء بنت الشيخ حميد بن أحمد المعال",
+      "name": "وفاء بنت حميد المعلا",
+      "displayName": "وفاء بنت الشيخ حميد بن أحمد المعلا",
       "gender": "female",
       "fatherId": null,
       "motherId": null,
@@ -2187,7 +2187,7 @@
       "childrenIds": [],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن راشد بن حمدان ووفاء المعال",
+      "notes": "ابن راشد بن حمدان ووفاء المعلا",
       "photoUrl": null,
       "uncertain": false
     },
@@ -2202,7 +2202,7 @@
       "childrenIds": [],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن راشد بن حمدان ووفاء المعال",
+      "notes": "ابن راشد بن حمدان ووفاء المعلا",
       "photoUrl": null,
       "uncertain": false
     },
@@ -2217,7 +2217,7 @@
       "childrenIds": [],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن راشد بن حمدان ووفاء المعال",
+      "notes": "ابن راشد بن حمدان ووفاء المعلا",
       "photoUrl": null,
       "uncertain": false
     },
@@ -2232,7 +2232,7 @@
       "childrenIds": [],
       "birthDate": null,
       "deathDate": null,
-      "notes": "ابن راشد بن حمدان ووفاء المعال",
+      "notes": "ابن راشد بن حمدان ووفاء المعلا",
       "photoUrl": null,
       "uncertain": false
     },

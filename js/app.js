@@ -199,10 +199,8 @@
      ============================================================== */
   function applyOwnerUIState() {
     document.body.classList.toggle('is-edit-mode', state.isOwner);
-    document.getElementById('edit-banner').hidden = !state.isOwner;
-    const viewer = document.getElementById('viewer-strip');
-    const viewerSeen = localStorage.getItem(LS_VIEWER_SEEN) === '1';
-    viewer.hidden = state.isOwner || viewerSeen;
+    // Banners removed — the lock icon state and the dirty indicator
+    // (bottom right) convey the mode without top chrome.
     // Lock button icon
     const locked = document.getElementById('icon-locked');
     const unlocked = document.getElementById('icon-unlocked');
@@ -239,8 +237,6 @@
     const skipBtn = document.getElementById('setup-skip');
     const errEl = document.getElementById('unlock-error');
     const setupErr = document.getElementById('setup-error');
-    const doneBtn = document.getElementById('btn-lock-done');
-
     lockBtn.addEventListener('click', () => {
       if (state.isOwner) {
         // Lock it back
@@ -251,11 +247,6 @@
         return;
       }
       openUnlockModal();
-    });
-    doneBtn.addEventListener('click', () => {
-      state.isOwner = false;
-      localStorage.removeItem(LS_OWNER);
-      applyOwnerUIState();
     });
 
     function openUnlockModal() {
@@ -1530,12 +1521,6 @@
     });
     const depthSel = document.getElementById('depth-select');
     if (depthSel) depthSel.addEventListener('change', (ev) => setDepth(ev.target.value));
-
-    // Viewer strip close
-    document.getElementById('viewer-strip-close').addEventListener('click', () => {
-      document.getElementById('viewer-strip').hidden = true;
-      try { localStorage.setItem(LS_VIEWER_SEEN, '1'); } catch (_) {}
-    });
 
     // Help
     document.getElementById('btn-help').addEventListener('click', () => {

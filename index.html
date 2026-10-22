@@ -403,68 +403,21 @@
   <!-- ===== Welcome Tour ===== -->
   <div class="modal" id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title" hidden>
     <div class="modal__backdrop" data-close="1"></div>
-    <div class="modal__dialog" role="document">
+    <div class="modal__dialog modal__dialog--sm" role="document">
       <button class="modal__close" id="welcome-close" aria-label="إغلاق">×</button>
-      <div class="welcome">
-        <div class="welcome__header">
-          <div class="welcome__icon" aria-hidden="true">
-            <svg viewBox="0 0 48 48" width="56" height="56">
-              <circle cx="24" cy="14" r="5" />
-              <path d="M24 19 L24 30" stroke-width="2" fill="none" />
-              <path d="M24 26 L14 34 M24 26 L34 34" stroke-width="2" fill="none" />
-              <circle cx="14" cy="36" r="3.5" />
-              <circle cx="34" cy="36" r="3.5" />
-            </svg>
-          </div>
-          <h2 id="welcome-title" class="welcome__title">أهلاً بك في شجرة عائلة بن خادم</h2>
-          <p class="welcome__sub">هذه نسخة تفاعلية تتيح لك تصفّح الأنساب والبحث عن أي فرد من العائلة.</p>
+      <div class="welcome welcome--minimal">
+        <div class="welcome__icon" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="44" height="44">
+            <circle cx="24" cy="14" r="5" />
+            <path d="M24 19 L24 30" stroke-width="2" fill="none" />
+            <path d="M24 26 L14 34 M24 26 L34 34" stroke-width="2" fill="none" />
+            <circle cx="14" cy="36" r="3.5" />
+            <circle cx="34" cy="36" r="3.5" />
+          </svg>
         </div>
-
-        <ul class="welcome__features">
-          <li>
-            <span class="welcome__ico">🌳</span>
-            <div>
-              <strong>تصفّح الشجرة</strong><br/>
-              انقر على <span class="chip-ex">▾</span> لتوسيع أو طي أي فرع. اضغط مزدوجاً للتوسيع الكامل.
-            </div>
-          </li>
-          <li>
-            <span class="welcome__ico">🔍</span>
-            <div>
-              <strong>البحث السريع</strong><br/>
-              اكتب أي اسم في شريط البحث للعثور عليه مباشرة في الشجرة.
-            </div>
-          </li>
-          <li>
-            <span class="welcome__ico">👤</span>
-            <div>
-              <strong>تفاصيل الأشخاص</strong><br/>
-              انقر على أي اسم لعرض تاريخ ميلاده، أبنائه، أزواجه، وإخوانه.
-            </div>
-          </li>
-          <li>
-            <span class="welcome__ico">🎨</span>
-            <div>
-              <strong>ثلاث طرق للعرض</strong><br/>
-              تفصيلية، مدمجة، أو بطاقات حسب الجيل — اختر ما يناسبك من الأعلى.
-            </div>
-          </li>
-          <li>
-            <span class="welcome__ico">🔒</span>
-            <div>
-              <strong>التعديل محمي</strong><br/>
-              التعديل متاح لمالك الشجرة فقط. يمكنك التصفّح بحرية دون القلق من تغيير البيانات.
-            </div>
-          </li>
-        </ul>
-
-        <div class="welcome__actions">
-          <label class="flag">
-            <input type="checkbox" id="welcome-dont-show" />
-            <span>لا تُظهر هذه الرسالة مرة أخرى</span>
-          </label>
-          <button class="btn btn--primary" id="welcome-start">ابدأ التصفّح</button>
-        </div>
+        <h2 id="welcome-title" class="welcome__title">أهلاً بك في شجرة عائلة بن خادم</h2>
+        <p class="welcome__sub">هذه نسخة تفاعلية تتيح لك تصفّح الأنساب والبحث عن أي فرد من العائلة.</p>
+        <button class="btn btn--primary welcome__cta" id="welcome-start">ابدأ التصفّح</button>
       </div>
     </div>
   </div>

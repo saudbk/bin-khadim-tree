@@ -377,18 +377,16 @@
     const seen = localStorage.getItem(LS_WELCOME) === '1';
     const closeBtn = document.getElementById('welcome-close');
     const startBtn = document.getElementById('welcome-start');
-    const dontShow = document.getElementById('welcome-dont-show');
 
     // Show only to viewers (not owners), only first time, and skip if deep-link present
     if (!seen && !state.isOwner && !window.location.hash) {
       setTimeout(() => { modal.hidden = false; }, 600);
     }
 
+    // Once dismissed, don't show again on this browser.
     const close = () => {
       modal.hidden = true;
-      if (dontShow.checked) {
-        try { localStorage.setItem(LS_WELCOME, '1'); } catch (_) {}
-      }
+      try { localStorage.setItem(LS_WELCOME, '1'); } catch (_) {}
     };
     closeBtn.addEventListener('click', close);
     startBtn.addEventListener('click', close);
